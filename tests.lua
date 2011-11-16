@@ -4,6 +4,10 @@ tests["Existance of common.class"] = function()
 	assert(common.class, "common.class is not exported!")
 end
 
+tests["Existence of common.instance"] = function()
+	assert(common.instance, "common.instance is not exported!")
+end
+
 tests["Creating a class"] = function()
 	local t = {}
 	t = common.class("Creating a class", t)
@@ -12,33 +16,33 @@ end
 
 tests["Instantiation"] = function()
 	local c = common.class("Instantiation", {})
-	local o = instantiate(c)
+	local o = common.instance(c)
 	assert(o)
 end
 
 tests["Accessing members"] = function()
 	local c = common.class("Accessing members", {member = true})
-	local o = instantiate(c)
+	local o = common.instance(c)
 	assert(o.member)
 end
 
 tests["Inheritance"] = function()
 	local c1 = common.class("Inheritance", {member = true})
 	local c2 = common.class("Inheritance2", {}, c1)
-	local o = instantiate(c2)
+	local o = common.instance(c2)
 	assert(o.member)
 end
 
 tests["Calling members"] = function()
 	local c = common.class("Calling members", {member = function() return true end})
-	local o = instantiate(c)
+	local o = common.instance(c)
 	assert(o.member and o.member())
 end
 
 tests["Initializer"] = function()
 	local initialized = false
 	local c = common.class("Initializer", {init = function() initialized = true end})
-	local o = instantiate(c)
+	local o = common.instance(c)
 	assert(initialized)
 end
 
@@ -46,7 +50,7 @@ tests["Inherited Initializer"] = function()
 	local initialized = false
 	local c1 = common.class("Inherited Initializer", {init = function() initialized = true end})
 	local c2 = common.class("Inherited Initializer2", {}, c1)
-	local o = instantiate(c2)
+	local o = common.instance(c2)
 	assert(initialized)
 end
 
@@ -54,7 +58,7 @@ tests["Initializer available in derived classes"] = function()
 	local initialized = false
 	local c1 = common.class("Parent Class", {init = function() initialized = true end})
 	local c2 = common.class("Derived Class", {init = function() assert(c1.init)() end})
-	local o = instantiate(c2)
+	local o = common.instance(c2)
 	assert(initialized)
 end
 
@@ -91,8 +95,6 @@ function run(implementation)
 	_G.common_class = true
 	--load the implementation
 	require(implementation)
-	--load the test interface for the implementation
-	require("tests." .. implementation .. "_test")
 	--count the attempts
 	local failed = 0
 	local attempts = 0
