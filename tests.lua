@@ -1,6 +1,6 @@
 tests = {}
 
-tests["Existance of common.class"] = function()
+tests["Existence of common.class"] = function()
 	assert(common.class, "common.class is not exported!")
 end
 
